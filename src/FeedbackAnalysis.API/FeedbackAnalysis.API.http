@@ -1,6 +1,42 @@
-@FeedbackAnalysis.API_HostAddress = http://localhost:5279
+@FeedbackAnalysis.API_HostAddress = https://feedbackanalysisapi.azurewebsites.net
 
-GET {{FeedbackAnalysis.API_HostAddress}}/weatherforecast/
-Accept: application/json
+### Register User
+
+POST {{FeedbackAnalysis.API_HostAddress}}/api/Authentication/signup
+Content-Type: application/json
+
+{
+  "email": "example@example.com",
+  "password": "password123",
+  "confirmPassword": "password123"
+}
+
+### User Login
+
+POST {{FeedbackAnalysis.API_HostAddress}}/api/Authentication/signin
+Content-Type: application/json
+
+{
+  "email": "example@example.com",
+  "password": "password123"
+}
+
+### Refresh Access Token
+
+POST {{FeedbackAnalysis.API_HostAddress}}/api/Authentication/refreshToken?refreshToken={refreshToken}
+Content-Type: application/json
+
+### Post Feedback Input
+
+POST {{FeedbackAnalysis.API_HostAddress}}/api/Feedback
+Authorization: Bearer <your_access_token>
+Content-Type: application/json
+
+"Your feedback goes here"
 
 ###
+
+### Get Feedback
+
+GET {{FeedbackAnalysis.API_HostAddress}}/api/Feedback
+Authorization: Bearer <your_access_token>

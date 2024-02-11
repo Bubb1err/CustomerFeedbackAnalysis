@@ -3,7 +3,6 @@ using FeedbackAnalysis.Contracts.FeedbackModels;
 using FeedbackAnalysis.Domain.Abstractions.Repository.Base;
 using FeedbackAnalysis.Domain.Entities;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace FeedbackAnalysis.Application.FeedbackAnalyze.GetFeedback
 {
@@ -23,7 +22,13 @@ namespace FeedbackAnalysis.Application.FeedbackAnalyze.GetFeedback
 
         public async Task<IEnumerable<DisplayFeedback>> Handle(GetFeedbackCommand request, CancellationToken cancellationToken)
         {
-            var feedbacks = await _feedbackRepository.GetAll().OrderBy(feedback => feedback.Created).Take(_feedbackGetAmount).ToListAsync();
+            var feedbacks = _feedbackRepository
+                .GetAll()
+                .OrderByDescending(feedback => feedback.Created)
+                .Take(_feedbackGetAmount)
+                .AsEnumerable()
+                .OrderBy(feedback => feedback.Created)
+                .ToList();
             return _mapper.Map<IEnumerable<DisplayFeedback>>(feedbacks);
         }
     }
