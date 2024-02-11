@@ -1,0 +1,6 @@
+@FeedbackAnalysis.API_HostAddress = http://localhost:5279
+
+GET {{FeedbackAnalysis.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

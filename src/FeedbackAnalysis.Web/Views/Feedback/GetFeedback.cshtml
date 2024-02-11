@@ -1,0 +1,92 @@
+﻿@model List<FeedbackAnalysis.Web.Models.Feedback.FeedbackViewModel>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <canvas id="myChart" style="width:100%;max-width:700px; margin: auto;"></canvas>
+        </div>
+        <div class="col-md-6">
+            <div id="additionalInfo" style="padding: 20px; background-color: #333; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); display: none;">
+                <p style="color: white;" id="infoContent"></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+<script>
+    var xValues = [];
+    const yValues = [];
+    var ids = [];
+    var entities = [];
+
+    @foreach (var item in Model)
+    {
+        @:ids.push("@item.Id");
+        @:xValues.push("@item.PositiveScore");
+        @:yValues.push("@item.Created");
+        @:entities.push(@Html.Raw(Json.Serialize(item)));
+    }
+
+        var chart = new Chart("myChart", {
+        type: "line",
+        data: {
+            labels: yValues,
+            datasets: [{
+                fill: false,
+                lineTension: 0,
+                backgroundColor: "rgba(0,0,255,1.0)",
+                borderColor: "rgba(0,0,255,0.1)",
+                data: xValues
+            }]
+        },
+        options: {
+            legend: {
+                display: false
+            },
+            scales: {
+                yAxes: [{ ticks: { min: 0, max: 1 } }],
+            }
+        }
+    });
+
+    var infoDiv = document.getElementById('additionalInfo');
+
+    chart.canvas.addEventListener('click', function (evt) {
+        var activePoints = chart.getElementsAtEventForMode(evt, 'nearest', { intersect: true }, false);
+
+        if (activePoints.length > 0) {
+            var dataIndex = activePoints[0]._index;
+            var id = ids[dataIndex];
+
+            var matchingEntity;
+            for (var i = 0; i < entities.length; i++) {
+                if (entities[i].id == id) {
+                    matchingEntity = entities[i];
+                    break;
+                }
+            }
+
+            if (matchingEntity) {
+                var id = matchingEntity.id;
+                var feedback = matchingEntity.feedbackMessage;
+                var positiveScore = matchingEntity.positiveScore;
+                var negativeScore = matchingEntity.negativeScore;
+                var neutralScore = matchingEntity.neutralScore;
+                var created = matchingEntity.created;
+
+                var infoContent = '<p>ID: ' + id + '</p>' +
+                    '<p>Feedback: ' + feedback + '</p>' +
+                    '<p>Positive Score: ' + positiveScore + '</p>' +
+                    '<p>Negative Score: ' + negativeScore + '</p>' +
+                    '<p>Neutral Score: ' + neutralScore + '</p>' +
+                    '<p>Created: ' + created + '</p>';
+
+                document.getElementById('infoContent').innerHTML = infoContent;
+                infoDiv.style.display = 'block';
+            } else {
+                console.log("No matching entity found.");
+            }
+        }
+    });
+</script>

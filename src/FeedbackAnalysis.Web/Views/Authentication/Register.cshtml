@@ -1,0 +1,94 @@
+﻿@model FeedbackAnalysis.Web.Models.Authentication.RegisterViewModel
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Registration</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .container {
+            margin-top: 50px;
+        }
+
+        body {
+            background-color: #141414;
+            color: #fff;
+        }
+
+        .form-group label {
+            color: #fff;
+        }
+
+        .form-control {
+            background-color: #333;
+            color: #fff;
+            border-color: #555;
+        }
+
+            .form-control:focus {
+                background-color: #444;
+                color: #fff;
+                border-color: #555;
+                box-shadow: none;
+            }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+            .btn-primary:hover {
+                background-color: #0056b3;
+                border-color: #0056b3;
+            }
+
+        .text-danger {
+            color: #dc3545;
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+            a:hover {
+                color: #0056b3;
+            }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <h2>Register</h2>
+                <form asp-action="Register" method="post" class="needs-validation" novalidate>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input asp-for="Email" id="email" name="email" type="email" class="form-control" required>
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input asp-for="Password" id="password" name="password" type="password" class="form-control" required>
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label>Confirm Password</label>
+                        <input asp-for="ConfirmPassword" id="confirmPassword" name="confirmPassword" type="password" class="form-control" required>
+                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Register</button>
+                </form>
+                <div class="mt-3">
+                    <small>Already have an account? <a asp-controller="Authentication" asp-action="Login">Login</a></small>
+                </div>
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+</body>
+</html>
